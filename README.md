@@ -86,5 +86,18 @@ Resources:
 * S3/DynamoDB/SQS/SNS/Kinesis
 * CloudWatch/CloudWatch Event
 * IAM Role
+### Tips
+* Switch Role環境でAWS CLIを実行する場合、.aws/credentialsに定義しておくと便利
+* AWSコマンド実行時、--profile cslab-admin を指定するのを忘れずに。
+```
+[cslab]
+aws_access_key_id = AAAAAAXXXXXXXXXXX
+aws_secret_access_key = BBBBBBBBBBXXXXXXXXXXXXX
+
+[cslab-admin]
+role_arn = arn:aws:iam::{Account Id}:role/common_role_admin
+source_profile = cslab
+region = us-west-2
+```
 ### その他
 * Mockではなく、Lambda Functionのデプロイは確認中。
