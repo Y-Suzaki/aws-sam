@@ -46,3 +46,45 @@ Resources:
       StageName: dev
       DefinitionUri: swagger.yaml
 ```
+
+### デプロイ手順
+##### package作成
+* コマンドの実行により、以下が行われる
+    * Serverlesの拡張templateから、素のCloudFormationのtempalteを生成
+    * デプロイに必要なファイル群をs3にアップロード
+    ```
+    aws cloudformation package \
+      --template-file aws-sam.yaml \
+      --output-template-file aws-sam-deploy.yaml \
+      --s3-bucket csx-mfr-common-module-ore-devdit
+      
+      ********************************************
+      
+      --template-file：入力ファイル名（AWS SAMのtempalte）
+      --output-template-file：出力ファイル名（素のCloudFormationのtempalte）
+      --s3-bucket：ファイルのアップロード先
+    ```
+
+##### CloudFormationのstack作成（更新）
+* コマンドの実行により、以下が行われる
+    * stackが作成（更新）され、APIGateway等のリソースが構築される
+    * APIGatewayのStageにデプロイされる
+    ```
+    aws cloudformation deploy 
+      --template-file aws-sam-deploy.yaml \
+      --stack-name dev-aws-sam-test 
+      --capabilities CAPABILITY_IAM
+    
+    ********************************************
+    
+      --template-file：入力ファイル名（素のCloudFormationのtempalte）
+      --stack-name：stack名
+      --capabilities：Roleの作成も行うため、CAPABILITY_IAMを指定
+    ```
+### AWS SAMで作成できるリソース
+* APIGateway/Lambda Function
+* S3/DynamoDB/SQS/SNS/Kinesis
+* CloudWatch/CloudWatch Event
+* IAM Role
+### その他
+* Mockではなく、Lambda Functionのデプロイは確認中。
