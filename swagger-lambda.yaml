@@ -40,23 +40,14 @@ paths:
         "503":
           description: "Internal server error."
       x-amazon-apigateway-integration:
-        type: mock
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 200
-            }
         responses:
           default:
             statusCode: 200
-            responseTemplates:
-              application/json: |
-                {
-                  [
-                    { "id":"00001", "name:"tanaka" },
-                    { "id":"00002", "name:"hayashi" }
-                  ]
-                }
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SkillsFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: POST
+        type: aws_proxy
     post:
       tags:
       - "Skill"
