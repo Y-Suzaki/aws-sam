@@ -56,7 +56,7 @@ Resources:
     aws cloudformation package \
       --template-file aws-sam.yaml \
       --output-template-file aws-sam-deploy.yaml \
-      --s3-bucket csx-mfr-common-module-ore-devdit
+      --s3-bucket {s3-bucket-name}
       
       ********************************************
       
