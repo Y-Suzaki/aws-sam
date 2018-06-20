@@ -6,6 +6,6 @@ import json
 def get(event, context): 
     response = {
         'statusCode': 200,
-        'body': json.dumps([{ 'id':'10001', 'name':'tanaka' }, { 'id':'10002', 'name':'hayashi' }])
+        'body': json.dumps({ 'id':'20001', 'name':'tanaka' })
     }
     return response

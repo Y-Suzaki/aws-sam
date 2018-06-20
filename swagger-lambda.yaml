@@ -104,20 +104,14 @@ paths:
         "404":
           description: "Skill not found"
       x-amazon-apigateway-integration:
-        type: mock
-        requestTemplates:
-          application/json: |
-            {
-              "statusCode" : 200
-            }
         responses:
           default:
             statusCode: 200
-            responseTemplates:
-              application/json: |
-                {
-                  "id":"00001", "name:"tanaka"
-                }
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SkillFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: POST
+        type: aws_proxy
 definitions:
   Skill:
     type: "object"
