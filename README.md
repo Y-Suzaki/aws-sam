@@ -8,9 +8,9 @@
     
 ### 実装手順
 ##### APIGatewayからのレスポンスをモック化する場合
-* doc/Api-Mock-README.md
+* [Api-Mock-README.md](doc/Api-Mock-README.md)
 ##### APIGatewayからのレスポンスをLambda Functionにする場合
-* dock/Api-Lambda-README.md
+* [Api-Lambda-README.md](dock/Api-Lambda-README.md)
 ### AWS SAMで作成できるリソース
 * APIGateway/Lambda Function
 * S3/DynamoDB/SQS/SNS/Kinesis
@@ -29,5 +29,3 @@ role_arn = arn:aws:iam::{Account Id}:role/common_role_admin
 source_profile = cslab
 region = us-west-2
 ```
-### その他
-* Mockではなく、Lambda Functionのデプロイは確認中。
