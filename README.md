@@ -10,7 +10,7 @@
 ##### APIGatewayからのレスポンスをモック化する場合
 * [Api-Mock-README.md](doc/Api-Mock-README.md)
 ##### APIGatewayからのレスポンスをLambda Functionにする場合
-* [Api-Lambda-README.md](dock/Api-Lambda-README.md)
+* [Api-Lambda-README.md](doc/Api-Lambda-README.md)
 ### AWS SAMで作成できるリソース
 * APIGateway/Lambda Function
 * S3/DynamoDB/SQS/SNS/Kinesis
