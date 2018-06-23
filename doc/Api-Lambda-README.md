@@ -1,30 +1,23 @@
 # APIGatewayからのレスポンスをLambda Functionにする場合
 ### 実装手順
 ##### Swagger Specを用意する
-* https://github.com/Y-Suzaki/aws-sam/blob/master/swagger.yaml
-* Swaggerの説明はしないが、まずは通常通り作成すれば良い
-* 上記に加えて、AWS拡張の定義が必要。これはSAMというより、APIGateway側の仕様のため。
-    * 説明の簡略化のため、ここではLambda Functionではなく、Mockで済ませている
+* https://github.com/Y-Suzaki/aws-sam/blob/master/swagger-lambda.yaml
+* APIGateway用の拡張である「x-amazon-apigateway-integration」の定義に、Lambda Functionへの参照を指定する必要がある。
+    * ※${SkillsFunction.Arn}のようなCloudFormationの定義が使える点については、SAM側のtemplate説明時に記載
     ```
-    x-amazon-apigateway-integration:
-      type: mock
-      requestTemplates:
-        application/json: |
-          {
-            "statusCode" : 200
-          }
-      responses:
-        default:
-          statusCode: 200
-          responseTemplates:
-            application/json: |
-              {
-                "id":"00001", "name:"tanaka"
-              }
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: 200
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SkillsFunction.Arn}/invocations
+        passthroughBehavior: "when_no_match"
+        httpMethod: POST
+        type: aws_proxy
     ```
     
 ##### AWS SAMのtemplateを用意する
-* https://github.com/Y-Suzaki/aws-sam/blob/master/aws-sam.yaml
+* https://github.com/Y-Suzaki/aws-sam/blob/master/aws-sam-lambda.yaml
 * CloudFormationの拡張機能なので、AWSを知っている人には馴染みやすい
 * 最低限、以下の定義があればデプロイは可能
 ```
