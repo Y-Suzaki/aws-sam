@@ -3,8 +3,8 @@
 ##### Swagger Specを用意する
 * https://github.com/Y-Suzaki/aws-sam/blob/master/swagger-lambda.yaml
 * APIGateway用の拡張である「x-amazon-apigateway-integration」の定義に、Lambda Functionへの参照を指定する必要がある。
-* ※${SkillsFunction.Arn}のようなCloudFormationの定義が使える点については、SAM側のtemplate説明時に記載
-```
+    * ※${SkillsFunction.Arn}のようなCloudFormationの定義が使える点については、SAM側のtemplate説明時に記載
+    ```
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -14,12 +14,13 @@
         passthroughBehavior: "when_no_match"
         httpMethod: POST
         type: aws_proxy
-```
+    ```
     
 ##### AWS SAMのtemplateを用意する
 * https://github.com/Y-Suzaki/aws-sam/blob/master/aws-sam-lambda.yaml
     * Swagger Spec側で本templateの定義を参照できると色々便利なため、Include（埋め込み）して使うようにしている
-    * 上記の場合、事前にSwagger Specをs3に配置しておく必要がある
+        * 上記のため、Swagger Spec側で${SkillsFunction.Arn}のような、本templateで定義しているAWSリソースの参照が可能になっている
+        * 制約として、事前にSwagger Specをs3に配置しておく必要がある
     ```
     Resources:
       SampleApi:
