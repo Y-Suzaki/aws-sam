@@ -3,8 +3,8 @@
 ##### Swagger Specを用意する
 * https://github.com/Y-Suzaki/aws-sam/blob/master/swagger-lambda.yaml
 * APIGateway用の拡張である「x-amazon-apigateway-integration」の定義に、Lambda Functionへの参照を指定する必要がある。
-    * ※${SkillsFunction.Arn}のようなCloudFormationの定義が使える点については、SAM側のtemplate説明時に記載
-    ```
+* ※${SkillsFunction.Arn}のようなCloudFormationの定義が使える点については、SAM側のtemplate説明時に記載
+```
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -14,25 +14,41 @@
         passthroughBehavior: "when_no_match"
         httpMethod: POST
         type: aws_proxy
-    ```
+```
     
 ##### AWS SAMのtemplateを用意する
 * https://github.com/Y-Suzaki/aws-sam/blob/master/aws-sam-lambda.yaml
-* CloudFormationの拡張機能なので、AWSを知っている人には馴染みやすい
-* 最低限、以下の定義があればデプロイは可能
-```
-AWSTemplateFormatVersion: 2010-09-09
-Transform: AWS::Serverless-2016-10-31
-Description: AWS SAM Swagger.
-
-Resources:
-  SampleApi:
-    Type: AWS::Serverless::Api
+    * Swagger Spec側で本templateの定義を参照できると色々便利なため、Include（埋め込み）して使うようにしている
+    * 上記の場合、事前にSwagger Specをs3に配置しておく必要がある
+    ```
+    Resources:
+      SampleApi:
+        Type: AWS::Serverless::Api
+        Properties:
+          StageName: dev
+          DefinitionBody:
+            Fn::Transform:
+              Name: AWS::Include
+              Parameters:
+                Location: !Sub s3://${ArtifactBucket}/swagger-lambda.yaml
+    ```
+    * Lambda Functionの定義と、EventとしてApiを指定する必要がある
+    ```
+    SkillsFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      StageName: dev
-      DefinitionUri: swagger.yaml
-```
-
+      Runtime: python3.6
+      Handler: lambda.get
+      CodeUri: src/skills
+      Role: !GetAtt LambdaRole.Arn
+      Events:
+        ApiProxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SampleApi
+            Path: /skills
+            Method: GET
+    ```
 ### デプロイ手順
 ##### package作成
 * コマンドの実行により、以下が行われる
