@@ -52,13 +52,16 @@
     ```
 ### デプロイ手順
 ##### package作成
+* 事前にSwagger Specをs3に配置しておく
+    * 本手順では、bucketの直下に配置
+    * 繰り返しデプロイするような場合、本手順も自動化しておくことが望ましい
 * コマンドの実行により、以下が行われる
     * Serverlesの拡張templateから、素のCloudFormationのtempalteを生成
     * デプロイに必要なファイル群をs3にアップロード
     ```
     aws cloudformation package \
-      --template-file aws-sam.yaml \
-      --output-template-file aws-sam-deploy.yaml \
+      --template-file aws-sam-lambda.yaml \
+      --output-template-file aws-sam-lambda-deploy.yaml \
       --s3-bucket {s3-bucket-name}
       
       ********************************************
@@ -69,18 +72,20 @@
     ```
 
 ##### CloudFormationのstack作成（更新）
+* s3のbcuket名をパラメータとして指定する必要がある
 * コマンドの実行により、以下が行われる
     * stackが作成（更新）され、APIGateway等のリソースが構築される
     * APIGatewayのStageにデプロイされる
     ```
     aws cloudformation deploy 
-      --template-file aws-sam-deploy.yaml \
-      --stack-name dev-aws-sam-test 
+      --template-file aws-sam-lambda-deploy.yaml \
+      --stack-name dev-aws-sam-lambda-test 
       --capabilities CAPABILITY_IAM
-    
+      --parameter-overrides ArtifactBucket=cslab-aws-sam-deploy-dev
     ********************************************
     
       --template-file：入力ファイル名（素のCloudFormationのtempalte）
       --stack-name：stack名
       --capabilities：Roleの作成も行うため、CAPABILITY_IAMを指定
+      --parameter-overrides：実行時に渡すパラメータを、key=valueで指定
     ```
