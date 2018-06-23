@@ -53,7 +53,7 @@
 ### デプロイ手順
 ##### package作成
 * 事前にSwagger Specをs3に配置しておく
-    * 本手順では、bucketの直下に配置
+    * 本手順では、bucketの直下に配置（{s3-bucket-name}/swagger-lambda.yaml）
     * 繰り返しデプロイするような場合、本手順も自動化しておくことが望ましい
 * コマンドの実行により、以下が行われる
     * Serverlesの拡張templateから、素のCloudFormationのtempalteを生成
